@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}{{ name }} - GreatJournalism.net{% endblock %}
+
+{% block extrahead %}
+
+<link rel="alternate" type="application/rss+xml" title="RSS feed" href="/feeds/byline/{{ nameslug }}/" />
+
+{% endblock %}
+
+{% block content %}
+
+{% if story_list %}
+
+<a href="/">Home</a> -> <a href="/byline/">Bylines</a> -> {{ name }}
+
+<h3>Stories by {{ name }} (<a href="/feeds/byline/{{ nameslug }}/">get an RSS feed for this byline</a>)</h3>
+
+   <ul>
+        {% for story in story_list %}
+            <li><a href="{{story.get_absolute_url}}">{{ story.headline }}</a> (<a href="{{ story.source.get_absolute_url}}">{{ story.source }}</a>), <a href="/{{ story.pubdate|date:"Y"}}/{{story.pubdate|date:"M"|lower}}/{{story.pubdate|date:"d"}}/">{{ story.pubdate|date:"F d, Y" }}</a>, posted on {{ story.postdate|date:"F d, Y" }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No stories with this byline are available.</p>
+    {% endif %}
+
+<h3>News Organizations</h3>
+
+  <ul>
+    {% for source in source_list %}
+    <li><a href="{{ source.get_absolute_url }}">{{ source.name }}</a> ({{ source.stories }} stor{{ source.stories|pluralize:"y,ies"}})</li>
+    {% endfor %}
+  </ul>
+
+{% endblock %}

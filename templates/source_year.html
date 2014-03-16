@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block extrahead %}
+
+<link rel="alternate" type="application/rss+xml" title="RSS feed" href="/feeds/source/{{ sourceslug }}/" />
+
+{% endblock %}
+
+{% block content %}
+
+{% if source_list %}
+
+<a href="/">Home</a> -> <a href="/source/">Source</a> -> <a href="/source/{{ sourceslug }}/">{{ source_name }}</a> -> {{ year }}
+
+<h3>{{ year }} Stories from the {{ source_name }}, a <a href="{{source_name.type.get_absolute_url}}">{{source_name.type}}</a> located in <a href="{{ source_name.state.get_absolute_url }}">{{ source_name.state }}</a>, {{ source_name.nation }} (<a href="/feeds/source/{{ sourceslug }}/">get an RSS feed for this source</a>)</h3>
+
+   <ul>
+        {% for story in source_list %}
+            <li><a href="{{story.get_absolute_url}}">{{ story.headline }}</a>, <a href="/{{ story.pubdate|date:"Y"}}/{{story.pubdate|date:"M"|lower}}/{{story.pubdate|date:"d"}}/">{{ story.pubdate|date:"F d, Y" }}</a>, posted on GreatJournalism.net on {{ story.postdate|date:"F d, Y" }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No stories from this source are available.</p>
+    {% endif %}
+
+{% endblock %}

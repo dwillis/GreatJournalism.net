@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}{{ source.name }} - GreatJournalism.net{% endblock %}
+
+{% block extrahead %}
+
+<link rel="alternate" type="application/rss+xml" title="RSS feed" href="/feeds/source/{{ sourceslug }}/" />
+
+{% endblock %}
+
+{% block content %}
+
+{% if source_list %}
+
+<a href="/">Home</a> -> <a href="/source/">Source</a> -> {% if all %}<a href="{{ source.get_absolute_url }}">{{ source.name }}</a> -> All Stories{% else %}{{ source.name }}{% endif %}
+
+
+<h3>{% if all %}All{% else %}10 Most Recent{% endif %} Stories from the {{ source.name }}{% if not all %} (<a href="all/">See all stories</a>){% endif %}, a <a href="{{source.type.get_absolute_url}}">{{source.type}}</a> located in <a href="{{ source.state.get_absolute_url }}">{{ source.state.statename }}</a>, {{ source.nation }} (GJ contains {{ story_num }} entries for this source; <a href="/feeds/source/{{ sourceslug }}/">get an RSS feed for this source</a>)</h3>
+
+   <ul>
+        {% for story in source_list %}
+            <li><a href="{{story.get_absolute_url}}">{{ story.headline }}</a>, <a href="/{{ story.pubdate|date:"Y"}}/{{story.pubdate|date:"M"|lower}}/{{story.pubdate|date:"d"}}/">{{ story.pubdate|date:"F d, Y" }}</a>, posted on GreatJournalism.net on {{ story.postdate|date:"F d, Y" }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No stories from this source are available.</p>
+    {% endif %}
+
+{% if year_list %}
+
+<h3>{{ source.name }} Stories by Year</h3>
+     {% for year in year_list %}
+       <a href="{{ year.year }}/">{{ year.year }}</a>{% if forloop.last %}{% else %}|{% endif %}
+     {% endfor %}
+    {% else %}
+    {% endif %}
+
+{% if topic_list %}
+
+<h3>{{ source.name }} Topics</h3>
+<ul>
+    {% for topic in topic_list %}
+       <li><a href="{{ topic.get_absolute_url }}">{{ topic }}</a> ({{ topic.stories }} stor{{ topic.stories|pluralize:"y,ies"}})</li>
+     {% endfor %}
+       </ul>
+    {% else %}
+
+  {% endif %}
+
+{% if byline_list %}
+
+<h3>{{ source.name }} Bylines</h3>
+<ul>
+    {% for byline in byline_list %}
+       <li><a href="{{ byline.get_absolute_url }}">{{ byline }}</a> ({{ byline.stories }} stor{{ byline.stories|pluralize:"y,ies"}})</li>
+     {% endfor %}
+       </ul>
+    {% else %}
+
+  {% endif %}
+{% endblock %}
